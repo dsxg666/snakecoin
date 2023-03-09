@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## SnakeCoin(1.0.0-Stable)
 
 一个简单的区块链实现，希望能够给您提供参考，谢谢。
@@ -34,7 +33,6 @@ snakecoin init
 ```
 
 
-
 #### 第二步
 
 第二步是新建一个账户。
@@ -56,9 +54,3 @@ go mod tidy
 ```
 
 如图所示：
-
-![](./img/09.png)
-=======
-# snakecoin
-一个简单的区块链系统。
->>>>>>> e14c0f2b94a9e1a633bda2310ac7acd1fbae1be3
