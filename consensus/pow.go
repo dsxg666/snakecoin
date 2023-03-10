@@ -9,25 +9,22 @@ import (
 	"time"
 )
 
-var InitDifficultyBits = 24
-
 // ProofOfWork pow结构体
 type ProofOfWork struct {
-	Difficulty          // 难度
-	Target     *big.Int // 目标域值
+	Target *big.Int // 目标域值
 }
 
 // Difficulty 挖矿难度结构体
 type Difficulty struct {
-	DifficultyBits int // 位移数
+	Bits int64 // 位移数
 }
 
 // NewProofOfWork 创建pow结构体
-func NewProofOfWork(bits int) *ProofOfWork {
+func NewProofOfWork(bits int64) *ProofOfWork {
 	target := big.NewInt(1)
 	// 相当于：target = target << (256-targetBits)
 	target.Lsh(target, uint(256-bits))
-	return &ProofOfWork{Difficulty{bits}, target}
+	return &ProofOfWork{target}
 }
 
 // Mine 挖矿

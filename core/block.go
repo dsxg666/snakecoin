@@ -17,14 +17,15 @@ type Block struct {
 
 // BlockHeader 块头结构体
 type BlockHeader struct {
-	Number                  int64  // 区块编号
-	Timestamp               int64  // 挖矿当前时间的时间戳
-	Nonce                   int64  // 随机数
-	MiningTimestamp         int64  // 挖矿所用时间的时间戳
-	Miner                   []byte // 矿工地址
-	Hash                    []byte // 自己的哈希
-	MerkleTreeRootHash      []byte // 默克尔树的根哈希
-	PreviousBlockHeaderHash []byte // 前一区块的块头哈希
+	Number                  int64                // 区块编号
+	Timestamp               int64                // 挖矿当前时间的时间戳
+	Nonce                   int64                // 随机数
+	MiningTimestamp         int64                // 挖矿所用时间的时间戳
+	Miner                   []byte               // 矿工地址
+	Hash                    []byte               // 自己的哈希
+	MerkleTreeRootHash      []byte               // 默克尔树的根哈希
+	PreviousBlockHeaderHash []byte               // 前一区块的块头哈希
+	Difficulty              consensus.Difficulty // 挖矿难度
 }
 
 // BlockBody 块身体结构体
@@ -32,7 +33,7 @@ type BlockBody struct {
 	Txs []*Transaction // 交易列表
 }
 
-func NewBlock(number int64, previousBlockHeaderHash, miner []byte, txs []*Transaction) *Block {
+func NewBlock(number, bit int64, previousBlockHeaderHash, miner []byte, txs []*Transaction) *Block {
 	// 如果txs==nil，则表示在创建创世区块
 	if txs == nil {
 		sum := sha256.Sum256([]byte("Hello, I'm SnakeCoin!"))
@@ -46,6 +47,7 @@ func NewBlock(number int64, previousBlockHeaderHash, miner []byte, txs []*Transa
 				Hash:                    sum[:],
 				MerkleTreeRootHash:      nil,
 				PreviousBlockHeaderHash: previousBlockHeaderHash,
+				Difficulty:              consensus.Difficulty{Bits: bit}, // 设定的初始难度
 			},
 			&BlockBody{
 				Txs: txs,
@@ -59,12 +61,13 @@ func NewBlock(number int64, previousBlockHeaderHash, miner []byte, txs []*Transa
 		Miner:                   miner,
 		MerkleTreeRootHash:      merkleTree.RootNode.Hash,
 		PreviousBlockHeaderHash: previousBlockHeaderHash,
+		Difficulty:              consensus.Difficulty{Bits: bit},
 	}
 	blockBody := &BlockBody{
 		Txs: txs,
 	}
 	block := &Block{blockHeader, blockBody}
-	pow := consensus.NewProofOfWork(consensus.InitDifficultyBits)
+	pow := consensus.NewProofOfWork(block.Header.Difficulty.Bits)
 	miningTimestamp, nonce, hash := pow.Mine(number, block.Header.Timestamp, miner, merkleTree.RootNode.Hash, previousBlockHeaderHash)
 	block.Header.MiningTimestamp = miningTimestamp
 	block.Header.Nonce = nonce
@@ -73,7 +76,7 @@ func NewBlock(number int64, previousBlockHeaderHash, miner []byte, txs []*Transa
 }
 
 func NewGenesisBlock() *Block {
-	return NewBlock(0, nil, []byte("0000000000000000000000000000000000"), nil)
+	return NewBlock(0, 24, nil, []byte("0000000000000000000000000000000000"), nil)
 }
 
 // Serialize 将 Block 结构体序列化

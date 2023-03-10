@@ -22,8 +22,8 @@ func HashPublicKey(pubKey []byte) []byte {
 	return publicRIPEMD160
 }
 
-// checksum 计算校验和，输入为0x00+公钥hash
-func checksum(payload []byte) []byte {
+// Checksum 计算校验和，输入为0x00+公钥hash
+func Checksum(payload []byte) []byte {
 
 	firstSHA := sha256.Sum256(payload)
 	secondSHA := sha256.Sum256(firstSHA[:])
@@ -40,7 +40,7 @@ func GetAddress(wallet *Wallet) []byte {
 	pubKeyHash := HashPublicKey(pubKey)
 	// 计算校验和
 	versionedPayload := append([]byte{version}, pubKeyHash...)
-	checksum := checksum(versionedPayload)
+	checksum := Checksum(versionedPayload)
 	// 计算base58编码
 	fullPayload := append(versionedPayload, checksum...)
 	address := Base58Encode(fullPayload)
