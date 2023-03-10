@@ -17,11 +17,13 @@ import (
 func Mine(num, txNum int, account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.SugaredLogger) {
 	var txs []*core.Transaction
 	t := txNum
+	// 从交易池获取交易
 	for i := 0; i < num; i++ {
 		t--
 		txB := db.Get(util.StringToBytes(strconv.FormatInt(int64(t), 10)), txDB)
 		txT := core.DeserializeTransaction(txB)
 		pubKey := accounts.PubDecode(txT.PublicKey)
+		// 验证签名
 		if !txT.Verify(pubKey) {
 			color.Red("Transaction verification failed!")
 			fmt.Println()
@@ -31,14 +33,14 @@ func Mine(num, txNum int, account string, txDB, accountDB, chainDB *pebble.DB, l
 		txT.State = "Writed"
 		db.Set(util.StringToBytes(strconv.FormatInt(int64(t), 10)), txT.Serialize(), txDB)
 	}
-
-	var bc core.Blockchain
-	fmt.Println("Please wait a moment, now is digging blocks for you.")
-	bc.AddBlock(account, chainDB, txs)
 	accB := db.Get(util.StringToBytes(account), accountDB)
 	acc := accounts.DeserializeAccount(accB)
 	acc.Balance = acc.Balance.Add(decimal.NewFromFloat(10))
 	db.Set(acc.Address, acc.Serialize(), accountDB)
+	var bc core.Blockchain
+	fmt.Println("Please wait a moment, now is digging blocks for you.")
+	bc.AddBlock(account, chainDB, txs)
+	fmt.Println()
 	s := strings.Split(util.CurrentTimeFormant(), " ")
 	color.Green("INFO [%s|%s] Successfully digging into a block, you will receive 10 skc.", s[0], s[1])
 	logger.Infof("INFO [%s|%s] Successfully digging into a block, you will receive 10 skc.", s[0], s[1])
