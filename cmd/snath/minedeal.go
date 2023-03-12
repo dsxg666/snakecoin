@@ -17,6 +17,11 @@ import (
 // Mine 挖矿处理逻辑
 func Mine(account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.SugaredLogger) {
 	txNum := core.NumOfTx(txDB)
+	if txNum == 0 {
+		color.Yellow("Mining requires at least one transaction!")
+		fmt.Println()
+		return
+	}
 	var txs []*core.Transaction
 	// 从交易池获取交易
 	for i := 0; i < txNum; i++ {
