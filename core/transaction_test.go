@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/dsxg666/snakecoin/accounts"
+	"github.com/shopspring/decimal"
 	"testing"
 	"time"
 )
@@ -9,8 +10,8 @@ import (
 func TestTransaction(t *testing.T) {
 	wallet := accounts.NewWallet()
 	_, pub := accounts.Encode(&wallet.PrivateKey, &wallet.PublicKey)
-	tx := NewTransaction(5.0, []byte("abcd"), []byte("efgh"), pub, time.Now().Unix())
-	tx2 := NewTransaction(5.5, []byte("abcd"), []byte("efgh"), pub, time.Now().Unix())
+	tx := NewTransaction(decimal.NewFromFloat(5.1), []byte("abcd"), []byte("efgh"), pub, time.Now().Unix())
+	tx2 := NewTransaction(decimal.NewFromFloat(5.8), []byte("abcd"), []byte("efgh"), pub, time.Now().Unix())
 	tx.Sign(&wallet.PrivateKey)
 	tx2.Sign(&wallet.PrivateKey)
 	if !tx.Verify(&wallet.PublicKey) {

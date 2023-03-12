@@ -1,4 +1,4 @@
-package console
+package main
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ func Transaction(account string, logger *zap.SugaredLogger, txDB, accountDB *peb
 	if b {
 		color.Yellow("Honey, the current transaction pool is full and cannot be traded.")
 	} else {
-		color.Blue("Welcome to the SnakeCoin transaction mode!")
+		color.Blue("Welcome to the Snath transaction mode!")
 		fmt.Println()
 		accB := db.Get(util.StringToBytes(account), accountDB)
 		acc := accounts.DeserializeAccount(accB)
@@ -68,17 +68,7 @@ func Transaction(account string, logger *zap.SugaredLogger, txDB, accountDB *peb
 							color.Green("INFO [%s|%s] A transaction was made successfully.", s[0], s[1])
 							logger.Infof("INFO [%s|%s] A transaction was made successfully.", s[0], s[1])
 							fmt.Println()
-							color.Blue("Welcome back to the SnakeCoin Blockchain console!")
-							fmt.Println()
-							fmt.Printf("CurrentAccountAddress: %s\n", account)
-							fmt.Println("You can enter the following instruction to use blockchain:")
-							fmt.Println("- [ transaction ] Conduct a transfer transaction")
-							fmt.Println("- [ txpool ] You can view the situation in the txpool")
-							fmt.Println("- [ mining ] Enter the mining program")
-							fmt.Println("- [ blockchain ] See block information")
-							fmt.Println("- [ balance ] Check your account balance")
-							fmt.Println()
-							fmt.Println("To exit, input quit")
+							meetAgain(account)
 							fmt.Println()
 						}
 					} else {

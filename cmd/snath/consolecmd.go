@@ -1,7 +1,6 @@
-package cmd
+package main
 
 import (
-	"github.com/dsxg666/snakecoin/cmd/console"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/logs"
 	"github.com/fatih/color"
@@ -9,14 +8,14 @@ import (
 	"strings"
 )
 
-// consoleCmd represents the console command
+// consoleCmd 代表 console 命令
 var consoleCmd = &cobra.Command{
 	Use:   "console",
 	Short: "Start an interactive environment",
 	Long: `
-The snakecoin console is an interactive shell for
-blockchain runtime environment which can interact
-with the blockchain.`,
+The snath is an interactive shell for blockchain
+runtime environment which can interactwith the
+blockchain.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		account, _ := cmd.Flags().GetString("account")
 		if strings.Compare("", account) == 0 {
@@ -28,7 +27,7 @@ with the blockchain.`,
 				accountDB := db.GetDB(db.AccountDataPath)
 				txDB := db.GetDB(db.TxDataPath)
 				chainDB := db.GetDB(db.ChainDataPath)
-				console.Start(logger, account, txDB, accountDB, chainDB)
+				Begin(logger, account, txDB, accountDB, chainDB)
 				db.CloseDB(chainDB)
 				db.CloseDB(txDB)
 				db.CloseDB(accountDB)

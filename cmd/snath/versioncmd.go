@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"fmt"
@@ -12,10 +12,9 @@ import (
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Version information",
-
-	Long: `Print version numbers`,
+	Long:  `Print version numbers`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("SnakeCoin")
+		fmt.Println("Snath")
 		fmt.Println("Version: 1.0.0-stable")
 		fmt.Printf("Architecture: %s\n", runtime.GOARCH)
 		fmt.Printf("Go Version: %s\n", runtime.Version())

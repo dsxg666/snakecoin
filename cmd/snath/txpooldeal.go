@@ -1,4 +1,4 @@
-package console
+package main
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func TxPool(account string, txDB *pebble.DB) {
 		color.Yellow("There is no transaction in the pool.")
 		fmt.Println()
 	} else {
-		color.Blue("Welcome to the SnakeCoin txpool mode!")
+		color.Blue("Welcome to the Snath txpool mode!")
 		fmt.Println()
 		color.Yellow("Note that the pool has a capacity of only 8, meaning it can only hold 8 transactions.")
 		fmt.Printf("There are now %d transactions in the pool.\n", num)
@@ -41,17 +41,7 @@ func TxPool(account string, txDB *pebble.DB) {
 			} else if strings.Compare(input, "leave") == 0 {
 				b = false
 				fmt.Println()
-				color.Blue("Welcome back to the SnakeCoin Blockchain console!")
-				fmt.Println()
-				fmt.Printf("CurrentAccountAddress: %s\n", account)
-				fmt.Println("You can enter the following instruction to use blockchain:")
-				fmt.Println("- [ transaction ] Conduct a transfer transaction")
-				fmt.Println("- [ txpool ] You can view the situation in the txpool")
-				fmt.Println("- [ mining ] Enter the mining program")
-				fmt.Println("- [ blockchain ] See block information")
-				fmt.Println("- [ balance ] Check your account balance")
-				fmt.Println()
-				fmt.Println("To exit, input quit")
+				meetAgain(account)
 				fmt.Println()
 			} else {
 				color.Red("Your input is not valid!")

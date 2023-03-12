@@ -40,6 +40,9 @@ func NewMerkleNode(left, right *MerkleNode, tx *Transaction) *MerkleNode {
 // NewMerkleTree 将节点组建成树
 func NewMerkleTree(txs []*Transaction) *MerkleTree {
 	var nodes []*MerkleNode
+	if len(txs)%2 != 0 {
+		txs = append(txs, txs[len(txs)-1])
+	}
 	for _, tx := range txs {
 		node := NewMerkleNode(nil, nil, tx)
 		nodes = append(nodes, node)

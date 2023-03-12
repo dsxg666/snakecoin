@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"os"
@@ -6,11 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// rootCmd 根命令
 var rootCmd = &cobra.Command{
-	Use:   "snakecoin",
-	Short: "A simple blockchain implementation by dsxg",
+	Use:   "snath",
+	Short: "The snakecoin command line interface",
 	Long: `
-The snakecoin is the benchmark ethereum, and although
+The snath is the benchmark ethereum, and although
 there are few features implemented so far,I will keep
 updating iteratively.`,
 }

@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-// accountCmd represents the account command
+// accountCmd 代表 account 命令
 var accountCmd = &cobra.Command{
 	Use:   "account",
 	Short: "Manage accounts",

@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"github.com/dsxg666/snakecoin/core"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-// initCmd represents the init command
+// initCmd 代表 init 命令
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Bootstrap and initialize a new genesis block",

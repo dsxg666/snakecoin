@@ -34,26 +34,6 @@ type BlockBody struct {
 }
 
 func NewBlock(number, bit int64, previousBlockHeaderHash, miner []byte, txs []*Transaction) *Block {
-	// 如果txs==nil，则表示在创建创世区块
-	if txs == nil {
-		sum := sha256.Sum256([]byte("Hello, I'm SnakeCoin!"))
-		return &Block{
-			&BlockHeader{
-				Number:                  number,
-				Timestamp:               time.Now().Unix(),
-				Nonce:                   0,
-				MiningTimestamp:         0,
-				Miner:                   miner,
-				Hash:                    sum[:],
-				MerkleTreeRootHash:      nil,
-				PreviousBlockHeaderHash: previousBlockHeaderHash,
-				Difficulty:              consensus.Difficulty{Bits: bit}, // 设定的初始难度
-			},
-			&BlockBody{
-				Txs: txs,
-			},
-		}
-	}
 	merkleTree := NewMerkleTree(txs)
 	blockHeader := &BlockHeader{
 		Number:                  number,
@@ -76,7 +56,23 @@ func NewBlock(number, bit int64, previousBlockHeaderHash, miner []byte, txs []*T
 }
 
 func NewGenesisBlock() *Block {
-	return NewBlock(0, 24, nil, []byte("0000000000000000000000000000000000"), nil)
+	sum := sha256.Sum256([]byte("Hello, I'm SnakeCoin!"))
+	return &Block{
+		&BlockHeader{
+			Number:                  0,
+			Timestamp:               time.Now().Unix(),
+			Nonce:                   0,
+			MiningTimestamp:         0,
+			Miner:                   []byte("0000000000000000000000000000000000"),
+			Hash:                    sum[:],
+			MerkleTreeRootHash:      nil,
+			PreviousBlockHeaderHash: nil,
+			Difficulty:              consensus.Difficulty{Bits: 24}, // 设定的初始难度
+		},
+		&BlockBody{
+			Txs: nil,
+		},
+	}
 }
 
 // Serialize 将 Block 结构体序列化

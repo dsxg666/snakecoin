@@ -1,4 +1,4 @@
-package console
+package main
 
 import (
 	"fmt"
@@ -14,13 +14,13 @@ import (
 	"strings"
 )
 
-func Mine(num, txNum int, account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.SugaredLogger) {
+// Mine 挖矿处理逻辑
+func Mine(account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.SugaredLogger) {
+	txNum := core.NumOfTx(txDB)
 	var txs []*core.Transaction
-	t := txNum
 	// 从交易池获取交易
-	for i := 0; i < num; i++ {
-		t--
-		txB := db.Get(util.StringToBytes(strconv.FormatInt(int64(t), 10)), txDB)
+	for i := 0; i < txNum; i++ {
+		txB := db.Get(util.StringToBytes(strconv.FormatInt(int64(i), 10)), txDB)
 		txT := core.DeserializeTransaction(txB)
 		pubKey := accounts.PubDecode(txT.PublicKey)
 		// 验证签名
@@ -31,7 +31,7 @@ func Mine(num, txNum int, account string, txDB, accountDB, chainDB *pebble.DB, l
 		}
 		txs = append(txs, txT)
 		txT.State = "Writed"
-		db.Set(util.StringToBytes(strconv.FormatInt(int64(t), 10)), txT.Serialize(), txDB)
+		db.Set(util.StringToBytes(strconv.FormatInt(int64(i), 10)), txT.Serialize(), txDB)
 	}
 	accB := db.Get(util.StringToBytes(account), accountDB)
 	acc := accounts.DeserializeAccount(accB)
@@ -45,16 +45,6 @@ func Mine(num, txNum int, account string, txDB, accountDB, chainDB *pebble.DB, l
 	color.Green("INFO [%s|%s] Successfully digging into a block, you will receive 10 skc.", s[0], s[1])
 	logger.Infof("INFO [%s|%s] Successfully digging into a block, you will receive 10 skc.", s[0], s[1])
 	fmt.Println()
-	color.Blue("Welcome back to the SnakeCoin Blockchain console!")
-	fmt.Println()
-	fmt.Printf("CurrentAccountAddress: %s\n", account)
-	fmt.Println("You can enter the following instruction to use blockchain:")
-	fmt.Println("- [ transaction ] Conduct a transfer transaction")
-	fmt.Println("- [ txpool ] You can view the situation in the txpool")
-	fmt.Println("- [ mining ] Enter the mining program")
-	fmt.Println("- [ blockchain ] See block information")
-	fmt.Println("- [ balance ] Check your account balance")
-	fmt.Println()
-	fmt.Println("To exit, input quit")
+	meetAgain(account)
 	fmt.Println()
 }
