@@ -1,12 +1,12 @@
-package main
+package console
 
 import (
 	"fmt"
 	"github.com/fatih/color"
 )
 
-// firstMeet 第一次进入控制台主页的提示符
-func firstMeet(account string) {
+// FirstMeet 第一次进入控制台主页的提示符
+func FirstMeet(account string) {
 	color.Blue("Welcome to the Snath console!")
 	fmt.Println()
 	fmt.Printf("CurrentAccountAddress: %s\n", account)
@@ -17,11 +17,11 @@ func firstMeet(account string) {
 	fmt.Println("- [ blockchain ] See block information")
 	fmt.Println("- [ balance ] Check your account balance")
 	fmt.Println()
-	fmt.Println("To exit, input quit")
+	fmt.Println("To exit, press ctrl-d or input quit")
 }
 
-// meetAgain 第一次之后进行控制台主页的提示符
-func meetAgain(account string) {
+// MeetAgain 第一次之后进行控制台主页的提示符
+func MeetAgain(account string) {
 	color.Blue("Welcome back to the Snath console!")
 	fmt.Println()
 	fmt.Printf("CurrentAccountAddress: %s\n", account)
@@ -32,5 +32,5 @@ func meetAgain(account string) {
 	fmt.Println("- [ blockchain ] See block information")
 	fmt.Println("- [ balance ] Check your account balance")
 	fmt.Println()
-	fmt.Println("To exit, input quit")
+	fmt.Println("To exit, press ctrl-d or input quit")
 }

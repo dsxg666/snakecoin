@@ -1,20 +1,21 @@
 package main
 
 import (
+	"os"
+	"strings"
+
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/logs"
 	"github.com/dsxg666/snakecoin/util"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"os"
-	"strings"
 )
 
 // initCmd 代表 init 命令
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Bootstrap and initialize a new genesis block",
+	Short: "Initialize a new genesis block",
 	Long: `
 The init command initializes a new genesis block and
 initializes the folder structure of the data. It
@@ -23,8 +24,8 @@ expects the file path as argument.`,
 		InitDataDir()
 		logger := logs.InitLogger()
 		chainDB := db.GetDB(db.ChainDataPath)
+		defer db.CloseDB(chainDB)
 		core.NewBlockchain(chainDB)
-		db.CloseDB(chainDB)
 		s := strings.Split(util.CurrentTimeFormant(), " ")
 		color.Green("INFO [%s|%s] Congratulations, the Genesis block was successfully initialized!", s[0], s[1])
 		logger.Infof("INFO [%s|%s] Congratulations, the Genesis block was successfully initialized!", s[0], s[1])

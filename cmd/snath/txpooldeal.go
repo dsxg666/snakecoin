@@ -2,15 +2,17 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/cockroachdb/pebble"
+	"github.com/dsxg666/snakecoin/console"
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/util"
 	"github.com/fatih/color"
-	"strings"
 )
 
-func TxPool(account string, txDB *pebble.DB) {
+func TxPoolDeal(account string, txDB *pebble.DB) {
 	num := core.NumOfTx(txDB)
 	if num == 0 {
 		color.Yellow("There is no transaction in the pool.")
@@ -41,7 +43,7 @@ func TxPool(account string, txDB *pebble.DB) {
 			} else if strings.Compare(input, "leave") == 0 {
 				b = false
 				fmt.Println()
-				meetAgain(account)
+				console.MeetAgain(account)
 				fmt.Println()
 			} else {
 				color.Red("Your input is not valid!")

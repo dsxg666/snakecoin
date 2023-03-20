@@ -2,20 +2,22 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/cockroachdb/pebble"
 	"github.com/dsxg666/snakecoin/accounts"
+	"github.com/dsxg666/snakecoin/console"
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/util"
 	"github.com/fatih/color"
 	"github.com/shopspring/decimal"
 	"go.uber.org/zap"
-	"strconv"
-	"strings"
 )
 
-// Mine 挖矿处理逻辑
-func Mine(account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.SugaredLogger) {
+// MineDeal 挖矿处理逻辑
+func MineDeal(account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.SugaredLogger) {
 	txNum := core.NumOfTx(txDB)
 	if txNum == 0 {
 		color.Yellow("Mining requires at least one transaction!")
@@ -50,6 +52,6 @@ func Mine(account string, txDB, accountDB, chainDB *pebble.DB, logger *zap.Sugar
 	color.Green("INFO [%s|%s] Successfully digging into a block, you will receive 10 skc.", s[0], s[1])
 	logger.Infof("INFO [%s|%s] Successfully digging into a block, you will receive 10 skc.", s[0], s[1])
 	fmt.Println()
-	meetAgain(account)
+	console.MeetAgain(account)
 	fmt.Println()
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/cockroachdb/pebble"
+	"github.com/dsxg666/snakecoin/console"
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/util"
@@ -11,7 +12,7 @@ import (
 	"strings"
 )
 
-func Blockchain(account string, chainDB *pebble.DB) {
+func BlockchainDeal(account string, chainDB *pebble.DB) {
 	prevHash := db.Get([]byte("last"), chainDB)
 	blockB := db.Get(prevHash, chainDB)
 	block := core.DeserializeBlock(blockB)
@@ -66,7 +67,7 @@ func Blockchain(account string, chainDB *pebble.DB) {
 			} else if strings.Compare(input, "leave") == 0 {
 				b = false
 				fmt.Println()
-				meetAgain(account)
+				console.MeetAgain(account)
 				fmt.Println()
 			} else {
 				color.Red("Your input is not valid!")

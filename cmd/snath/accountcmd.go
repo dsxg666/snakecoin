@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/dsxg666/snakecoin/accounts"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/logs"
 	"github.com/dsxg666/snakecoin/util"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 // accountCmd 代表 account 命令

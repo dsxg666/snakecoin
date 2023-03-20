@@ -2,20 +2,22 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/cockroachdb/pebble"
 	"github.com/dsxg666/snakecoin/accounts"
+	"github.com/dsxg666/snakecoin/console"
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
 	"github.com/dsxg666/snakecoin/util"
 	"github.com/fatih/color"
 	"github.com/shopspring/decimal"
 	"go.uber.org/zap"
-	"strconv"
-	"strings"
-	"time"
 )
 
-func Transaction(account string, logger *zap.SugaredLogger, txDB, accountDB *pebble.DB) {
+func TransactionDeal(account string, logger *zap.SugaredLogger, txDB, accountDB *pebble.DB) {
 	b, loc := core.IsFull(txDB)
 	if b {
 		color.Yellow("Honey, the current transaction pool is full and cannot be traded.")
@@ -68,7 +70,7 @@ func Transaction(account string, logger *zap.SugaredLogger, txDB, accountDB *peb
 							color.Green("INFO [%s|%s] A transaction was made successfully.", s[0], s[1])
 							logger.Infof("INFO [%s|%s] A transaction was made successfully.", s[0], s[1])
 							fmt.Println()
-							meetAgain(account)
+							console.MeetAgain(account)
 							fmt.Println()
 						}
 					} else {
