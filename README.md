@@ -1,4 +1,4 @@
-## SnakeCoin(1.0.0-Stable)
+## SnakeCoin(1.3.0-Stable)
 
 snakecoin 暂时只实现了基本的区块链功能，但会一直进行更新迭代，加油！
 
