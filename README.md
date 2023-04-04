@@ -1,18 +1,6 @@
-## SnakeCoin(1.3.0-Stable)
+## SnakeCoin
 
-snakecoin 暂时只实现了基本的区块链功能，但会一直进行更新迭代，加油！
+A simple blockchain implementation.
+## Notice
 
-## 注意
-
-该项目会一直开源。欢迎提供任何关于项目的建议以及提出该项目的bug和不足之处。期待和您一起讨论。
-
-因为该项目的部分第三方包需要Go语言版本在`1.19.0`以上，如果您想拉取代码进行调试，为确保正常运行，请使用`1.19.0`以上的Go语言环境。
-
-## 目前实现：
-
-1. 区块数据持久化。
-1. 基于账户的交易模型。
-
-## 其他
-
-我的一个用Golang Gin框架实现的一个类似博客的网站，也欢迎来浏览、学习：www.dsxg.site
+Because some third-party packages of the project require Go language version higher than `1.19.0`, if you want pull code for debugging, please use a Go language environment higher than `1.19.0` to ensure operation normally.
