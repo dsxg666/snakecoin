@@ -1,35 +1,35 @@
-package wallet
+package account
 
 import (
 	"crypto/ecdsa"
+	"log"
+	"os"
+
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcutil/hdkeychain"
+	util "github.com/dsxg666/snakecoin/common"
+	"github.com/dsxg666/snakecoin/db"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/tyler-smith/go-bip39"
-	"log"
 )
 
-const defaultHDPath = "m/44'/60'/0'/0/1"
-
-type Wallet struct {
-	Address  common.Address
-	Keystore *Keystore
+func NewAccount() common.Address {
+	acc := NewAddress()
+	priKey, pubKey := NewKeys()
+	path := db.KeystorePath + "/" + acc.Hex()
+	_ = os.Mkdir(path, 0777)
+	util.WriteFile(path+"/private", string(EncodePriKey(priKey)))
+	util.WriteFile(path+"/public", string(EncodePubKey(pubKey)))
+	return acc
 }
 
-func NewWallet() *Wallet {
+func NewAddress() common.Address {
 	mnemonic := createMnemonic()
 	priKey := newPriKeyFromMnemonic(mnemonic)
 	pubKey := derivePubKey(priKey)
-	address := crypto.PubkeyToAddress(*pubKey)
-	k := NewKeystore(priKey, address)
-	return &Wallet{Address: address, Keystore: k}
-}
-
-func (w Wallet) StoreKey(pass string) {
-	filename := w.Keystore.joinPath(w.Address.Hex())
-	w.Keystore.storeKey(filename, &w.Keystore.Key, pass)
+	return crypto.PubkeyToAddress(*pubKey)
 }
 
 func createMnemonic() string {
@@ -39,7 +39,7 @@ func createMnemonic() string {
 }
 
 func newPriKeyFromMnemonic(mnemonic string) *ecdsa.PrivateKey {
-	path, err := accounts.ParseDerivationPath(defaultHDPath)
+	path, err := accounts.ParseDerivationPath("m/44'/60'/0'/0/1")
 	if err != nil {
 		log.Panic("Failed to ParseDerivationPath:", err)
 	}
@@ -66,7 +66,7 @@ func derivePriKey(path accounts.DerivationPath, masterKey *hdkeychain.ExtendedKe
 
 	priKey, err := key.ECPrivKey()
 	if err != nil {
-		log.Panic("Failed to ECPrivKey")
+		log.Panic("Failed to ECPrivKey:", err)
 	}
 
 	return priKey.ToECDSA()

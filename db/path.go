@@ -1,7 +1,7 @@
 package db
 
 var (
-	AccountPath  string = "./data/account"
+	MPTirePath   string = "./data/mptire"
 	ChainPath    string = "./data/chain"
 	KeystorePath string = "./data/keystore"
 	LogPath      string = "./data/log"
