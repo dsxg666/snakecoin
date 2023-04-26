@@ -7,6 +7,5 @@ func GetCurrentTime() string {
 }
 
 func TimestampToTime(timestamp int64) string {
-	t := time.Unix(timestamp, 0)
-	return t.Format("2006-01-02 15:04:05")
+	return time.Unix(timestamp, 0).Format("2006-01-02 15:04:05")
 }

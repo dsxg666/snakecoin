@@ -1,0 +1,47 @@
+#
+# About
+#
+#  Use a conditional jump to loop ten times, building up a string as we go.
+#
+# Usage:
+#
+#  $ go.vm run ./concat.in
+#
+# Or compile, then execute:
+#
+#  $ go.vm compile ./concat.in
+#  $ go.vm execute ./concat.raw
+#
+
+        store #1, "Counting bananas"
+        print_str #1
+
+        store #1, 10
+        store #2, 1
+
+        store #3, ""
+        store #4, " banana"
+:repeat
+
+        #
+        # This means "reg1 = reg1 - reg2"
+        #
+        sub #1, #1, #2
+
+        concat #3, #3, #4
+        print_str #3
+
+        # add newline to the output
+        store #5, "\n"
+        print_str #5
+
+        #
+        # This jump only occur if the zero-flag is set.
+        #
+        jmpnz repeat
+
+
+        store #1, "Done"
+        print_str #1
+
+        exit

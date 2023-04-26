@@ -8,11 +8,10 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "snath",
-	Short: "The snakcoin command line interface",
+	Short: "The snakecoin command line interface",
 	Long: `
-The snath is the benchmark ethereum, and although
-there are few features implemented so far, I will
-keep updating iteratively.`,
+The snakecoin is a simple blockchain technology implementation
+and the snath is a command line interface to snakecoin.`,
 }
 
 func Execute() {

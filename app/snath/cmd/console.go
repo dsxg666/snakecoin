@@ -8,6 +8,7 @@ import (
 func init() {
 	rootCmd.AddCommand(consoleCmd)
 	consoleCmd.Flags().StringP("account", "a", "", "an account for mining and transferring skc")
+	consoleCmd.Flags().StringP("password", "p", "", "password used to unlock the account")
 }
 
 var consoleCmd = &cobra.Command{

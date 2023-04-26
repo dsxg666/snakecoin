@@ -1,0 +1,17 @@
+#
+# About
+#
+#  This program just executes /bin/ls.
+#
+# Usage:
+#
+#  $ go.vm run ./system.in
+#
+# Or compile, then execute:
+#
+#  $ go.vm compile ./system.in
+#  $ go.vm execute ./system.raw
+#
+
+        store #1, "/bin/ls"
+        system #1

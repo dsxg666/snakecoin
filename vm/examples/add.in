@@ -1,0 +1,23 @@
+#
+# About
+#
+#  This program adds two numbers.
+#
+# Usage:
+#
+#  $ go.vm run ./add.in
+#
+# Or compile, then execute:
+#
+#  $ go.vm compile ./add.in
+#  $ go.vm execute ./add.raw
+#
+
+        store #1, 10
+        store #2, 20
+        add #0, #1, #2
+        print_int #0
+
+        # add newline to the output
+        store #1, "\n"
+        print_str #1

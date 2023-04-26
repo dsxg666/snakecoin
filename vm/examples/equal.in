@@ -1,0 +1,36 @@
+#
+# About
+#
+#  This program tests our comparision operation.
+#
+# Usage:
+#
+#  $ go.vm run ./equal.in
+#
+# Or compile, then execute:
+#
+#  $ go.vm compile ./equal.in
+#  $ go.vm execute ./equal.raw
+#
+
+        store #1, 20
+        store #2, 30
+
+        cmp #1, #2
+        jmpz twenty_eq_thirty
+
+        store #2, 20
+        cmp #1, #2
+        jmpz twenty_eq_twenty
+
+        exit
+
+:twenty_eq_twenty
+        store #0, "20 == 20 - OK!\n"
+        print_str #0
+        exit
+
+:twenty_eq_thirty
+        store #0, "20 == 30 - Bug!\n"
+        print_str #0
+        exit

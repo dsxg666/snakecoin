@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"log"
+	"math/big"
 	"time"
 
 	"github.com/cockroachdb/pebble"
@@ -25,11 +26,11 @@ type BlockHeader struct {
 	StateTreeRoot  common.Hash
 	MerkleTreeRoot common.Hash
 	Coinbase       common.Address
-	Difficulty     uint64
-	Number         uint64
+	Difficulty     *big.Int
+	Number         *big.Int
+	Nonce          *big.Int
 	GasLimit       uint64
 	GasUsed        uint64
-	Nonce          uint64
 	Time           uint64
 }
 
@@ -38,11 +39,12 @@ type BlockBody struct {
 }
 
 func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transaction) {
-	lastBlockHash := db.Get([]byte{byte(99)}, chainDB)
+	// Get previous block
+	lastBlockHash := db.Get([]byte("latest"), chainDB)
 	lastBlockBytes := db.Get(lastBlockHash, chainDB)
 	lastBlock := DeserializeBlock(lastBlockBytes)
-	merkleTree := NewMerkleTree(txs)
-	number := lastBlock.Header.Number + 1
+	// Create new Block
+	number := new(big.Int).Add(lastBlock.Header.Number, common.Big1)
 	block := &Block{
 		&BlockHeader{
 			Number:   number,
@@ -53,14 +55,18 @@ func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transac
 			Txs: txs,
 		},
 	}
-	mptBytes := db.Get([]byte{byte(99)}, mptDB)
-	db.Set([]byte{byte(number)}, mptBytes, mptDB)
+	// Store current mpt
+	mptBytes := db.Get([]byte("latest"), mptDB)
+	db.Set(number.Bytes(), mptBytes, mptDB)
 	block.Header.StateTreeRoot.SetBytes(crypto.Keccak256(mptBytes))
+	// Building MerkleTree
+	merkleTree := NewMerkleTree(txs)
 	block.Header.MerkleTreeRoot.SetBytes(merkleTree.RootNode.Hash)
+
 	block.Header.PrevBlockHash.SetBytes(lastBlock.Header.BlockHash.Bytes())
 	fmt.Println("Mining is underway now, please wait patiently.")
 	nonce, diff := pow.Pow(lastBlock.Header.Difficulty, pow.CombinedData(
-		pow.ToBytes(block.Header.Number),
+		block.Header.Number.Bytes(),
 		pow.ToBytes(block.Header.Time),
 		block.Header.Coinbase.Bytes(),
 		block.Header.PrevBlockHash.Bytes(),
@@ -72,21 +78,23 @@ func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transac
 	blockHash := block.Hash()
 	block.Header.BlockHash.SetBytes(blockHash)
 	db.Set(blockHash, block.Serialize(), chainDB)
-	db.Set([]byte{byte(99)}, blockHash, chainDB)
+	db.Set([]byte("latest"), blockHash, chainDB)
 }
 
 func NewGenesisBlock(chainDB *pebble.DB) {
 	block := &Block{
 		&BlockHeader{
 			Time:       uint64(time.Now().Unix()),
-			Difficulty: 2195456,
+			Difficulty: big.NewInt(2195456),
+			Number:     common.Big0,
+			Nonce:      common.Big0,
 		},
 		&BlockBody{},
 	}
 	blockHash := block.Hash()
 	block.Header.BlockHash.SetBytes(blockHash)
 	db.Set(blockHash, block.Serialize(), chainDB)
-	db.Set([]byte{byte(99)}, blockHash, chainDB)
+	db.Set([]byte("latest"), blockHash, chainDB)
 }
 
 func (b *Block) Hash() []byte {

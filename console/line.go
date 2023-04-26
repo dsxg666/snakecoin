@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	instructions = []string{"balance", "blockchain", "mine", "txpool", "transaction", "quit", "mptrie"}
+	instructions = []string{"balance", "blockchain", "mine", "txpool", "transaction", "quit", "mptrie", "lookupInfoByHash"}
 )
 
 func GetLiner() *liner.State {

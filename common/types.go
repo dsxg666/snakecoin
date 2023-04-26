@@ -43,7 +43,7 @@ func (h *Hash) Bytes() []byte { return h[:] }
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-// Address represents the 20 byte address of an account.
+// Address represents the 20 byte address of an wallet.
 type Address [AddressLength]byte
 
 // BytesToAddress returns Address with value b.
@@ -65,7 +65,7 @@ func (a *Address) SetBytes(b []byte) {
 
 func (a *Address) Bytes() []byte { return a[:] }
 
-func (a Address) Hex() string {
+func (a *Address) Hex() string {
 	return string(a.checksumHex())
 }
 
@@ -90,7 +90,7 @@ func (a *Address) checksumHex() []byte {
 	return buf[:]
 }
 
-func (a Address) hex() []byte {
+func (a *Address) hex() []byte {
 	var buf [len(a)*2 + 2]byte
 	copy(buf[:2], "0x")
 	hex.Encode(buf[2:], a[:])

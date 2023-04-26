@@ -1,19 +1,21 @@
 package logic
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/dsxg666/snakecoin/account"
 	"github.com/dsxg666/snakecoin/common"
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
+	"github.com/dsxg666/snakecoin/mpt"
 	"github.com/dsxg666/snakecoin/rlp"
-	mptrie "github.com/dsxg666/snakecoin/trie"
+	"github.com/dsxg666/snakecoin/wallet"
 	"github.com/fatih/color"
+	"github.com/howeyc/gopass"
 )
 
 func New() {
@@ -27,24 +29,37 @@ func New() {
 	// Get and close db
 	mptDB := db.GetDB(db.MPTirePath)
 	defer db.CloseDB(mptDB)
-	acc := account.NewAccount()
-	// Save account state to mptrie
-	mptBytes := db.Get([]byte{byte(99)}, mptDB)
+	// New and store Account
+	w := wallet.NewWallet()
+	fmt.Println("Your new account is locked with a password. Please give a password. Do not forget this password.")
+	fmt.Print("Password: ")
+	pass, _ := gopass.GetPasswd()
+	fmt.Print("Repeat password: ")
+	pass2, _ := gopass.GetPasswd()
+	if !bytes.Equal(pass, pass2) {
+		color.Yellow("Passwords do not match!")
+		fmt.Println()
+		return
+	}
+	path := db.KeystorePath + "/" + w.Address.Hex()
+	w.StoreKey(path, pass)
+	// Save state to mptrie
+	mptBytes := db.Get([]byte("latest"), mptDB)
 	var e []interface{}
 	err = rlp.DecodeBytes(mptBytes, &e)
 	if err != nil {
 		log.Panic("Failed to DecodeBytes:", err)
 	}
-	trie := mptrie.NewTrieWithDecodeData(e)
+	trie := mpt.NewTrieWithDecodeData(e)
 	s := core.NewState()
-	err = trie.Put(acc.Bytes(), s.Serialize())
+	err = trie.Put(w.Address.Bytes(), s.Serialize())
 	if err != nil {
 		log.Panic("Failed to Put:", err)
 	}
-	db.Set([]byte{byte(99)}, mptrie.Serialize(trie.Root), mptDB)
+	db.Set([]byte("latest"), mpt.Serialize(trie.Root), mptDB)
 	// Prompt
 	time := strings.Split(common.GetCurrentTime(), " ")
-	color.Green("INFO [%s|%s] Account creation succeeded! address: %s", time[0], time[1], acc.Hex())
+	color.Green("INFO [%s|%s] Account creation succeeded! address: %s", time[0], time[1], w.Address.Hex())
 	fmt.Println()
 }
 

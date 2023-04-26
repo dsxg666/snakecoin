@@ -8,7 +8,7 @@ import (
 	"github.com/dsxg666/snakecoin/common"
 	"github.com/dsxg666/snakecoin/core"
 	"github.com/dsxg666/snakecoin/db"
-	mptrie "github.com/dsxg666/snakecoin/trie"
+	"github.com/dsxg666/snakecoin/mpt"
 	"github.com/fatih/color"
 )
 
@@ -23,16 +23,16 @@ func Init() {
 		// Blockchain initialization
 		core.NewGenesisBlock(chainDB)
 		// MPTire initialization
-		trie := mptrie.NewTrie()
-		trie.Put([]byte("hello"), []byte("world"))
-		db.Set([]byte{byte(99)}, mptrie.Serialize(trie.Root), mptDB)
+		trie := mpt.NewTrie()
+		_ = trie.Put([]byte("hello"), []byte("snath"))
+		db.Set([]byte("latest"), mpt.Serialize(trie.Root), mptDB)
 		// Prompt
 		time := strings.Split(common.GetCurrentTime(), " ")
 		color.Green("INFO [%s|%s] Initialization is successful!", time[0], time[1])
 		fmt.Println("The data directory is generated for you in the current directory.")
 		fmt.Println()
 	} else {
-		color.Red("The initialization is done! please init other command.")
+		color.Red("The initialization is done! please try other command.")
 		fmt.Println()
 	}
 }

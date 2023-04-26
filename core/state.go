@@ -4,20 +4,20 @@ import (
 	"bytes"
 	"encoding/gob"
 	"log"
+	"math/big"
 
 	"github.com/dsxg666/snakecoin/common"
-	"github.com/shopspring/decimal"
 )
 
 type State struct {
-	Nonce    uint64          // The number of transactions completed by the account
-	Balance  decimal.Decimal // Current Account Balance
-	Storage  common.Hash     // Contract Code Storage Hash
-	CodeHash []byte          // Contract Code Hash
+	Nonce    uint64      // The number of transactions completed by the wallet
+	Balance  *big.Int    // Current Account Balance
+	Storage  common.Hash // Contract Code Storage Hash
+	CodeHash []byte      // Contract Code Hash
 }
 
 func NewState() *State {
-	return &State{Balance: decimal.NewFromFloat(10)}
+	return &State{Balance: big.NewInt(100)}
 }
 
 func (s *State) Serialize() []byte {
