@@ -1,0 +1,95 @@
+{{define "main/txs.html"}}
+    <!doctype html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Snakecoin 交易</title>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    {{template "public/header.html"}}
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">交易哈希</th>
+                <th scope="col">区块</th>
+                <th scope="col">时间</th>
+                <th scope="col">发送者地址</th>
+                <th scope="col">接收者地址</th>
+                <th scope="col">交易数额</th>
+            </tr>
+            </thead>
+            <tbody id="tTx">
+            {{range $key, $value := .txs}}
+                <tr>
+                    <td>{{$value.TxHash}}</td>
+                    <td>{{$value.Block}}</td>
+                    <td>{{$value.Time}}</td>
+                    <td>{{$value.From}}</td>
+                    <td>{{$value.To}}</td>
+                    <td>{{$value.Amount}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <div class="btn-group form-control" role="group" aria-label="Basic example">
+                    <a type="button" class="btn btn-primary" href="/txs?pageNum={{.left}}"><-</a>
+                    <input type="text" id="pageShow" placeholder=" 当前 {{.currentPage}} | 总页数 {{.totalPage}}">
+                    <button type="button" id="go" class="btn btn-primary">Go</button>
+                    <a type="button" class="btn btn-primary" href="/txs?pageNum={{.right}}">-></a>
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+    {{template "public/footer.html"}}
+    <script src="/static/js/jquery-3.7.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/message.js"></script>
+    <script>
+        let tTx = $("#tTx");
+        let c = tTx.find("tr");
+        c.each(function (index, c) {
+            let f = $(c).find("td:nth-child(1)");
+            let tex = f.text();
+            f.html("<a href='/tx/"+tex+"'>"+tex.slice(0, 15)+"</a>"+"...");
+            let f2 = $(c).find("td:nth-child(4)");
+            let tex2 = f2.text();
+            f2.text(tex2.slice(0, 15)+"...");
+            let f3 = $(c).find("td:nth-child(5)");
+            let tex3 = f3.text();
+            f3.text(tex3.slice(0, 15)+"...");
+        });
+
+        let btn = $("#go");
+        btn.click(() => {
+            let val = $("#pageShow").val();
+            if (val === "") {
+                $.message({
+                    message: '页号不能为空！',
+                    type: 'error'
+                });
+            } else if (!Number.isInteger(Number(val))) {
+                $.message({
+                    message: '页号必须为整数！',
+                    type: 'error'
+                });
+            } else if (parseInt(val) <=0 || parseInt(val) > {{.totalPage}}) {
+                $.message({
+                    message: '无效的页号！',
+                    type: 'error'
+                });
+            } else {
+                window.location.href = "/blocks?pageNum="+val;
+            }
+        })
+    </script>
+    </body>
+    </html>
+{{end}}

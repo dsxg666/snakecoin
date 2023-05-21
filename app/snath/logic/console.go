@@ -81,7 +81,7 @@ func Interface(acc string, w *wallet.Wallet) {
 			case "balance":
 				Balance(acc, mptDB)
 			case "lookupInfoByHash":
-				LookupInfoByHash(acc, txDB, chainDB, line)
+				LookupInfoByHash(acc, chainDB, line)
 			default:
 				color.Yellow("Honey, we don't support your instruction yet.")
 				fmt.Println()
@@ -105,7 +105,7 @@ func Prompts(account string) {
 	fmt.Println("To exit, press ctrl-d or input quit")
 }
 
-func LookupInfoByHash(acc string, txDB, chainDB *pebble.DB, line *liner.State) {
+func LookupInfoByHash(acc string, chainDB *pebble.DB, line *liner.State) {
 	color.Blue("Welcome to LookupInfoByHash Mode!")
 	fmt.Println(" - Enter 1 for block query")
 	fmt.Println(" - Enter 2 for transaction query")
@@ -272,7 +272,7 @@ func Transaction(acc string, txDB, mptDB *pebble.DB, w *wallet.Wallet, line *lin
 	balance := state.Balance
 	var finish bool
 	for {
-		fmt.Println("Which acc do you want do transfer skc to?")
+		fmt.Println("Which account do you want do transfer skc to?")
 		if to, err := line.Prompt("> "); err != nil {
 			fmt.Println()
 			fmt.Println()
@@ -285,7 +285,7 @@ func Transaction(acc string, txDB, mptDB *pebble.DB, w *wallet.Wallet, line *lin
 				break
 			}
 			if !AccountIsExist(to) {
-				color.Red("The acc you entered does net exist!")
+				color.Red("The account you entered does net exist!")
 				fmt.Println()
 				continue
 			}
@@ -433,7 +433,7 @@ func Mine(acc string, txDB, chainDB, mptDB *pebble.DB) {
 	trie.Update(accBytes, state.Serialize())
 	db.Set([]byte("latest"), mpt.Serialize(trie.Root), mptDB)
 	// Create block
-	core.NewBlock(common.BytesToAddress(accBytes), chainDB, mptDB, txs)
+	core.NewBlock(i, common.BytesToAddress(accBytes), chainDB, mptDB, txs)
 	// Prompt
 	times := strings.Split(common.GetCurrentTime(), " ")
 	fmt.Println()
@@ -510,7 +510,6 @@ func MPTrie(acc string, chainDB, mptDB *pebble.DB, line *liner.State) {
 	lastBlock := core.DeserializeBlock(lastBlockBytes)
 	num := lastBlock.Header.Number
 	if num.String() == "0" {
-
 		color.Yellow("Current only genesis block, this mode is not allowed.")
 		fmt.Println()
 		return

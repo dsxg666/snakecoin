@@ -1,0 +1,19 @@
+{{define "public/header.html"}}
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/"
+               class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <img src="/static/img/logo.png" width="40" height="40">&nbsp;&nbsp;
+                <span class="fs-4" style="color: black">Snakecoin</span>
+            </a>
+            <ul class="nav">
+                <li class="nav-item"><a href="/" class="nav-link" style="color: black">首页</a></li>
+                <li class="nav-item"><a href="/getBalance" class="nav-link" style="color: black">余额查询</a></li>
+                <li class="nav-item"><a href="/newAccount" class="nav-link" style="color: black">创建账户</a></li>
+                <li class="nav-item"><a href="/newTx" class="nav-link" style="color: black">交易</a></li>
+                <li class="nav-item"><a href="/txPool" class="nav-link" style="color: black">交易池</a></li>
+                <li class="nav-item"><a href="/mine" class="nav-link" style="color: black">挖矿</a></li>
+            </ul>
+        </header>
+    </div>
+{{end}}

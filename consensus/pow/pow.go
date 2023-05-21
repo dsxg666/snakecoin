@@ -14,7 +14,7 @@ import (
 func Pow(diff *big.Int, data []byte) (*big.Int, *big.Int) {
 	nonce := new(big.Int)
 	begin := time.Now().UnixNano()
-	for !mine(diff, nonce, data) {
+	for !Mine(diff, nonce, data) {
 		nonce.Add(nonce, common.Big1)
 	}
 	end := time.Now().UnixNano()
@@ -27,7 +27,7 @@ func Pow(diff *big.Int, data []byte) (*big.Int, *big.Int) {
 	return nonce, diff
 }
 
-func mine(diff, nonce *big.Int, data []byte) bool {
+func Mine(diff, nonce *big.Int, data []byte) bool {
 	t := append(data, nonce.Bytes()...)
 	res := common.Bytes2BigInt(sha256.Sum256(t))
 	temp := new(big.Int).Exp(common.Big2, common.Big256, nil) // 2**256

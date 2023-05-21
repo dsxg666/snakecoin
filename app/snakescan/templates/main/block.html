@@ -1,0 +1,68 @@
+{{define "main/block.html"}}
+    <!doctype html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Snakecoin 区块 #{{.num}}</title>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    {{template "public/header.html"}}
+    <div class="container">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>区块高度</td>
+                <td>{{.number}}</td>
+            </tr>
+            <tr>
+                <td>随机数</td>
+                <td>{{.nonce}}</td>
+            </tr>
+            <tr>
+                <td>出块时间</td>
+                <td>{{.time}}</td>
+            </tr>
+            <tr>
+                <td>交易数</td>
+                <td>{{.txs}}</td>
+            </tr>
+            <tr>
+                <td>出块奖励</td>
+                <td>{{.reward}}</td>
+            </tr>
+            <tr>
+                <td>难度</td>
+                <td>{{.difficulty}}</td>
+            </tr>
+            <tr>
+                <td>奖励接收者</td>
+                <td>{{.coinbase}}</td>
+            </tr>
+            <tr>
+                <td>区块哈希</td>
+                <td>{{.blockHash}}</td>
+            </tr>
+            <tr>
+                <td>前区块哈希</td>
+                <td>{{.prevBlockHash}}</td>
+            </tr>
+            <tr>
+                <td>状态树根哈希</td>
+                <td>{{.stateTreeRoot}}</td>
+            </tr>
+            <tr>
+                <td>默克尔树根哈希</td>
+                <td>{{.merkleTreeRoot}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {{template "public/footer.html"}}
+    <script src="/static/js/jquery-3.7.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+{{end}}

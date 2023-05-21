@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+option go_package = "../pb;pb";
+
+service Rpc {
+  rpc NewAccount(NewAccountReq) returns (NewAccountResp) {}
+  rpc GetInfoByBlockNum(GetInfoByBlockNumReq) returns (GetInfoByBlockNumResp) {}
+  rpc GetInfoByBlockHash(GetInfoByBlockHashReq) returns (GetInfoByBlockHashResp) {}
+  rpc NewTx(NewTxReq) returns (NewTxResp) {}
+  rpc GetTxPool(GetTxPoolReq) returns (GetTxPoolResp) {}
+  rpc GetInfoByTxHash(GetInfoByTxHashReq) returns (GetInfoByTxHashResp) {}
+  rpc Mine(MineReq) returns (MineResp) {}
+  rpc NewBlock(NewBlockReq) returns (NewBlockResp) {}
+  rpc GetAllBlock(GetAllBlockReq) returns (GetAllBlockResp) {}
+  rpc GetAllTx(GetAllTxReq) returns (GetAllTxResp) {}
+  rpc GetBalance(GetBalanceReq) returns (GetBalanceResp) {}
+}
+
+message GetBalanceReq {
+  string addr = 1;
+}
+
+message GetBalanceResp {
+  string balance = 1;
+}
+
+message GetAllTxReq {}
+
+message GetAllTxResp {
+  message Tx {
+    string txHash = 1;
+    string from = 2;
+    string to = 3;
+    string amount = 4;
+    string time = 5;
+    string block = 6;
+  }
+  repeated Tx txs = 1;
+}
+
+message GetAllBlockReq {}
+
+message GetAllBlockResp {
+  message Block {
+    string number = 1;
+    string time = 2;
+    string txs = 3;
+    string miner = 4;
+    string reward = 5;
+  }
+  repeated Block bs = 1;
+}
+
+message NewBlockReq{
+  string nonce = 1;
+  string miner = 2;
+}
+
+message NewBlockResp {
+  string state = 1;
+}
+
+message MineReq{}
+
+message MineResp{
+  string nonce = 1;
+}
+
+message GetInfoByTxHashReq {
+  string hash = 1;
+}
+
+message GetInfoByTxHashResp {
+  string txHash = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  string time = 5;
+  string block = 6;
+}
+
+message GetTxPoolReq {}
+
+message GetTxPoolResp {
+  message Tx {
+    string txHash = 1;
+    string from = 2;
+    string to = 3;
+    string amount = 4;
+    string time = 5;
+  }
+  repeated Tx txs = 1;
+}
+
+message NewAccountReq {
+  string password = 1;
+}
+
+message NewAccountResp {
+  string account = 1;
+}
+
+message NewTxReq {
+  string password = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+}
+
+message NewTxResp {
+  string state = 1;
+}
+
+message GetInfoByBlockNumReq {
+  string num = 1;
+}
+
+message GetInfoByBlockNumResp {
+  string number = 1;
+  string nonce = 2;
+  string time = 3;
+  string txs = 4;
+  string reward = 5;
+  string difficulty = 6;
+  string coinbase = 7;
+  string blockHash = 8;
+  string prevBlockHash = 9;
+  string stateTreeRoot = 10;
+  string merkleTreeRoot = 11;
+}
+
+message GetInfoByBlockHashReq {
+  string hash = 1;
+}
+
+message GetInfoByBlockHashResp {
+  string number = 1;
+  string nonce = 2;
+  string time = 3;
+  string txs = 4;
+  string reward = 5;
+  string difficulty = 6;
+  string coinbase = 7;
+  string blockHash = 8;
+  string prevBlockHash = 9;
+  string stateTreeRoot = 10;
+  string merkleTreeRoot = 11;
+}

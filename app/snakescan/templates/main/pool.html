@@ -1,0 +1,61 @@
+{{define "main/pool.html"}}
+    <!doctype html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Snakecoin 交易池</title>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    {{template "public/header.html"}}
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">交易哈希</th>
+                <th scope="col">发送地址</th>
+                <th scope="col">接收地址</th>
+                <th scope="col">交易数额</th>
+                <th scope="col">时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key, $value := .txs}}
+                <tr>
+                    <td>{{$value.TxHash}}</td>
+                    <td>{{$value.From}}</td>
+                    <td>{{$value.To}}</td>
+                    <td>{{$value.Amount}} skc</td>
+                    <td>{{$value.Time}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    {{template "public/footer.html"}}
+    <script src="/static/js/jquery-3.7.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let parentElement = $("tbody"); // 获取父元素
+        let childElements = parentElement.find("tr"); // 获取子元素集合
+
+        // 遍历子元素
+        childElements.each(function(index, childElement) {
+            let firstGrandchildElement = $(childElement).find("td:first");
+            let secondGrandchildElement = $(childElement).find("td:nth-child(2)");
+            let thirdGrandchildElement = $(childElement).find("td:nth-child(3)")
+            if (firstGrandchildElement.length > 0 && secondGrandchildElement.length > 0) {
+                let firstValue = firstGrandchildElement.text();
+                let secondValue = secondGrandchildElement.text();
+                let thirdValue = thirdGrandchildElement.text();
+                firstGrandchildElement.text(firstValue.slice(2, 15)+"...");
+                secondGrandchildElement.text(secondValue.slice(0, 15)+"...");
+                thirdGrandchildElement.text(thirdValue.slice(0, 15)+"...");
+            }
+        });
+    </script>
+    </body>
+    </html>
+{{end}}

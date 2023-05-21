@@ -68,7 +68,7 @@ func TrimKey(key []byte) []byte {
 	l := len(key)
 	if len(key) < 8 {
 		for i := 0; i < 8-l; i++ {
-			key = append(key, byte(';'))
+			key = append(key, byte(i))
 		}
 		return key
 	} else if len(key) > 8 {

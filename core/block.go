@@ -29,6 +29,7 @@ type BlockHeader struct {
 	Difficulty     *big.Int
 	Number         *big.Int
 	Nonce          *big.Int
+	Reward         *big.Int
 	GasLimit       uint64
 	GasUsed        uint64
 	Time           uint64
@@ -38,7 +39,7 @@ type BlockBody struct {
 	Txs []*Transaction
 }
 
-func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transaction) {
+func NewBlock(reward *big.Int, coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transaction) {
 	// Get previous block
 	lastBlockHash := db.Get([]byte("latest"), chainDB)
 	lastBlockBytes := db.Get(lastBlockHash, chainDB)
@@ -50,6 +51,7 @@ func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transac
 			Number:   number,
 			Time:     uint64(time.Now().Unix()),
 			Coinbase: coinbase,
+			Reward:   reward,
 		},
 		&BlockBody{
 			Txs: txs,
@@ -62,7 +64,6 @@ func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transac
 	// Building MerkleTree
 	merkleTree := NewMerkleTree(txs)
 	block.Header.MerkleTreeRoot.SetBytes(merkleTree.RootNode.Hash)
-
 	block.Header.PrevBlockHash.SetBytes(lastBlock.Header.BlockHash.Bytes())
 	fmt.Println("Mining is underway now, please wait patiently.")
 	nonce, diff := pow.Pow(lastBlock.Header.Difficulty, pow.CombinedData(
@@ -81,6 +82,36 @@ func NewBlock(coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transac
 	db.Set([]byte("latest"), blockHash, chainDB)
 }
 
+func NewBlock2(reward, nonce, diff, prevNum *big.Int, prevHash []byte, coinbase common.Address, chainDB, mptDB *pebble.DB, txs []*Transaction) {
+	// Create new Block
+	number := new(big.Int).Add(prevNum, common.Big1)
+	block := &Block{
+		&BlockHeader{
+			Number:   number,
+			Time:     uint64(time.Now().Unix()),
+			Coinbase: coinbase,
+			Reward:   reward,
+		},
+		&BlockBody{
+			Txs: txs,
+		},
+	}
+	// Store current mpt
+	mptBytes := db.Get([]byte("latest"), mptDB)
+	db.Set(number.Bytes(), mptBytes, mptDB)
+	block.Header.StateTreeRoot.SetBytes(crypto.Keccak256(mptBytes))
+	// Building MerkleTree
+	merkleTree := NewMerkleTree(txs)
+	block.Header.MerkleTreeRoot.SetBytes(merkleTree.RootNode.Hash)
+	block.Header.PrevBlockHash.SetBytes(prevHash)
+	block.Header.Difficulty = diff
+	block.Header.Nonce = nonce
+	blockHash := block.Hash()
+	block.Header.BlockHash.SetBytes(blockHash)
+	db.Set(blockHash, block.Serialize(), chainDB)
+	db.Set([]byte("latest"), blockHash, chainDB)
+}
+
 func NewGenesisBlock(chainDB *pebble.DB) {
 	block := &Block{
 		&BlockHeader{
@@ -88,6 +119,7 @@ func NewGenesisBlock(chainDB *pebble.DB) {
 			Difficulty: big.NewInt(2195456),
 			Number:     common.Big0,
 			Nonce:      common.Big0,
+			Reward:     common.Big0,
 		},
 		&BlockBody{},
 	}
@@ -95,6 +127,7 @@ func NewGenesisBlock(chainDB *pebble.DB) {
 	block.Header.BlockHash.SetBytes(blockHash)
 	db.Set(blockHash, block.Serialize(), chainDB)
 	db.Set([]byte("latest"), blockHash, chainDB)
+	db.Set([]byte("difficulty"), []byte("2195456"), chainDB)
 }
 
 func (b *Block) Hash() []byte {

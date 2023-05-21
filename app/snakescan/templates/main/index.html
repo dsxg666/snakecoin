@@ -1,0 +1,135 @@
+{{define "main/index.html"}}
+    <!doctype html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Snakecoin (SKC) 区块链</title>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    {{template "public/header.html"}}
+    <div class="container">
+        <div class="input-group">
+            <select id="mySelect">
+                <option value="getInfoByBlockNumber" selected>区块高度</option>
+                <option value="getInfoByBlockHash">区块哈希</option>
+                <option value="getInfoByTxHash">交易哈希</option>
+            </select>
+            <input id="searchInput" type="text" class="form-control" placeholder="根据区块高度搜索区块信息">
+            <a class="btn btn-outline-dark" id="search">搜索</a>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h5>最近的区块</h5>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">区块高度</th>
+                        <th scope="col">区块奖励和出块时间</th>
+                        <th scope="col">奖励接收者</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tBLock">
+                    {{range $key, $value := .blocks}}
+                        <tr>
+                            <td><a href="/block/{{$value.Number}}">{{$value.Number}}</a></td>
+                            <td>{{$value.Reward}}<br>{{$value.Time}}</td>
+                            <td>{{$value.Miner}}</td>
+                        </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+                <p class="text-center" style="margin-top: 10px"><a class="nav-link" href="/blocks?pageNum=1">查看全部区块 -></a>
+                </p>
+            </div>
+            <div class="col">
+                <h5>最近的交易</h5>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">交易哈希</th>
+                        <th scope="col">发送者和接收者</th>
+                        <th scope="col">交易数额</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tTx">
+                    {{range $key, $value := .txs}}
+                        <tr>
+                            <td>{{$value.TxHash}}</td>
+                            <td>{{$value.From}}<br>{{$value.To}}</td>
+                            <td>{{$value.Amount}}</td>
+                        </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+                <p class="text-center" style="margin-top: 10px"><a class="nav-link" href="/txs?pageNum=1">查看全部交易 -></a></p>
+            </div>
+        </div>
+    </div>
+    {{template "public/footer.html"}}
+    <script src="/static/js/jquery-3.7.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/message.js"></script>
+    <script>
+        let parentElement = $("#tBLock"); // 获取父元素
+        let childElements = parentElement.find("tr"); // 获取子元素集合
+        childElements.each(function (index, childElement) {
+            let secondGrandchildElement = $(childElement).find("td:nth-child(3)");
+            let secondValue = secondGrandchildElement.text();
+            secondGrandchildElement.text(secondValue.slice(0, 15) + "...");
+        });
+        let parentElement2 = $("#tTx"); // 获取父元素
+        let childElements2 = parentElement2.find("tr"); // 获取子元素集合
+        childElements2.each(function (index, childElement) {
+            let secondGrandchildElement = $(childElement).find("td:nth-child(1)");
+            let fromAndTo =  $(childElement).find("td:nth-child(2)");
+            let secondValue = secondGrandchildElement.text();
+            secondGrandchildElement.html("<a href='/tx/"+secondValue+"'>"+secondValue.slice(0, 15)+"</a>"+"...");
+
+            let fromAndToVal = fromAndTo.text();
+            let arr = fromAndToVal.split("0x")
+            fromAndTo.html("From: 0x"+arr[1].slice(0,15)+"..."+"<br>"+"To: 0x"+arr[2].slice(0,15)+"...")
+        });
+
+        let select = $("#mySelect");
+        let selectValue = select.val();
+        select.change(function () {
+            selectValue = $(this).val();
+            if (selectValue === "getInfoByBlockNumber") {
+                $("#searchInput").attr("placeholder", "根据区块高度搜索区块信息");
+            } else if (selectValue === "getInfoByBlockHash") {
+                $("#searchInput").attr("placeholder", "根据区块哈希搜索区块信息");
+            } else if (selectValue === "getInfoByTxHash") {
+                $("#searchInput").attr("placeholder", "根据交易哈希搜索交易信息");
+            }
+        });
+        let searchInput = $("#searchInput");
+        let search = $("#search");
+        search.click(() => {
+            if (searchInput.val() !== "") {
+                if (selectValue === "getInfoByBlockNumber") {
+                    if (!Number.isInteger(Number(searchInput.val()))) {
+                        $.message({
+                            message: '请输入一个整数进行搜索！',
+                            type: 'error'
+                        });
+                        searchInput.val("");
+                    } else {
+                        $("#search").attr("href", "/block/" + searchInput.val());
+                    }
+                } else if (selectValue === "getInfoByBlockHash") {
+                    $("#search").attr("href", "/block/byHash?hash=" + searchInput.val());
+                } else if (selectValue === "getInfoByTxHash") {
+                    $("#search").attr("href", "/tx/" + searchInput.val());
+                }
+            }
+        })
+    </script>
+    </body>
+    </html>
+{{end}}

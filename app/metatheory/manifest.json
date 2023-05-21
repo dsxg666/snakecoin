@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "MetaTheory",
+  "version": "1.0.0",
+  "description": "An Snakecoin Wallet in your Browser",
+  "icons": {
+    "16": "static/img/icon-16.png",
+    "32": "static/img/icon-32.png",
+    "48": "static/img/icon-48.png",
+    "128": "static/img/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "static/js/content.js"
+      ],
+      "matches": [
+        "https://developer.chrome.com/docs/extensions/*",
+        "https://developer.chrome.com/docs/webstore/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "static/img/icon-16.png",
+      "32": "static/img/icon-32.png",
+      "48": "static/img/icon-48.png",
+      "128": "static/img/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab"
+  ]
+}

@@ -28,10 +28,12 @@ func TestTrimKey(t *testing.T) {
 		ans int
 	}{
 		{[]byte("1234"), 8},
+		{[]byte(";]anba"), 8},
 		{[]byte("12345678"), 8},
 		{[]byte("123456789lx,s;"), 8},
 	}
 	for _, tt := range tests {
+		fmt.Println(TrimKey(tt.b))
 		if actual := TrimKey(tt.b); len(actual) != tt.ans {
 			t.Errorf("TrimKey(%s) expected %d, but got %d", string(tt.b), tt.ans, len(actual))
 		}

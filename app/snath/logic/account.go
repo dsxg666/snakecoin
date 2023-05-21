@@ -43,6 +43,7 @@ func New() {
 	}
 	path := db.KeystorePath + "/" + w.Address.Hex()
 	w.StoreKey(path, pass)
+
 	// Save state to mptrie
 	mptBytes := db.Get([]byte("latest"), mptDB)
 	var e []interface{}
@@ -57,6 +58,7 @@ func New() {
 		log.Panic("Failed to Put:", err)
 	}
 	db.Set([]byte("latest"), mpt.Serialize(trie.Root), mptDB)
+
 	// Prompt
 	time := strings.Split(common.GetCurrentTime(), " ")
 	color.Green("INFO [%s|%s] Account creation succeeded! address: %s", time[0], time[1], w.Address.Hex())

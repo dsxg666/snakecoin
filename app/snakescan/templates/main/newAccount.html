@@ -1,0 +1,55 @@
+{{define "main/newAccount.html"}}
+    <!doctype html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Snakecoin 创建账户</title>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    {{template "public/header.html"}}
+    <div class="container my-5">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
+                    <form action="/newAccount" method="post" onsubmit="return check()">
+                        <input type="password" name="password" id="newPass" class="form-control" placeholder="输入密码"><br>
+                        <input type="password" id="newPass2" class="form-control" placeholder="再次输入密码"><br>
+                        <input type="submit" class="btn btn-primary" value="创建">
+                    </form>
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+    {{template "public/footer.html"}}
+    <script src="/static/js/jquery-3.7.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/message.js"></script>
+    <script>
+        function check() {
+            let v1 = $("#newPass").val();
+            let v2 = $("#newPass2").val();
+            if (v1 === "" || v2 === "") {
+                $.message({
+                    message: '密码不能为0！',
+                    type: 'error'
+                });
+                return false
+            }
+            if (v1 !== v2) {
+                $.message({
+                    message: '两次输入的密码不一致！',
+                    type: 'error'
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+    </body>
+    </html>
+{{end}}

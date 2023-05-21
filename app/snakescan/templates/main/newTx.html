@@ -1,0 +1,116 @@
+{{define "main/newTx.html"}}
+    <!doctype html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Snakecoin 创建交易</title>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    {{template "public/header.html"}}
+    <div class="container my-5">
+        <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
+            <input type="text" name="from" id="from" class="form-control" placeholder="发送地址"><br>
+            <input type="text" name="to" id="to" class="form-control" placeholder="接收地址"><br>
+            <input type="text" name="amount" id="amount" class="form-control" placeholder="交易数额"><br>
+            <input type="password" name="password" id="pswd" class="form-control" placeholder="密码"><br>
+            <button class="btn btn-primary" id="sendTx">进行交易</button>
+        </div>
+    </div>
+    {{template "public/footer.html"}}
+    <script src="/static/js/jquery-3.7.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/message.js"></script>
+    <script>
+        $("#sendTx").click(() => {
+            let from = $("#from").val();
+            let to = $("#to").val();
+            let amount = $("#amount").val();
+            let password = $("#pswd").val();
+            if (from === "") {
+                $.message({
+                    message: '发送地址不能为空！',
+                    type: 'error'
+                });
+            } else if (to === "") {
+                $.message({
+                    message: '接收地址不能为空！',
+                    type: 'error'
+                });
+            } else if (amount === "") {
+                $.message({
+                    message: '交易数额不能为空！',
+                    type: 'error'
+                });
+            } else if (!Number.isInteger(Number(amount))) {
+                $.message({
+                    message: '交易数额必须为整数！',
+                    type: 'error'
+                });
+            } else if (parseInt(amount) <= 0) {
+                $.message({
+                    message: '交易数额不能小于等于0！',
+                    type: 'error'
+                });
+            }
+            else if (password === "") {
+                $.message({
+                    message: '密码不能为空！',
+                    type: 'error'
+                });
+            } else {
+                $.ajax({
+                    url: "/newTx",
+                    method: "Post",
+                    data: {
+                        "from": from,
+                        "to": to,
+                        "amount": amount,
+                        "password": password,
+                    },
+                    success: function (response) {
+                        if (response["state"] === "0") {
+                            $.message({
+                                message: '发送方地址不存在！',
+                                type: 'error'
+                            });
+                        } else if (response["state"] === "1") {
+                            $.message({
+                                message: '接收方地址不存在！',
+                                type: 'error'
+                            });
+                        } else if (response["state"] === "2") {
+                            $.message({
+                                message: '密码错误！',
+                                type: 'error'
+                            });
+                        } else if (response["state"] === "3") {
+                            $.message({
+                                message: '交易池已满！',
+                                type: 'error'
+                            });
+                        } else if (response["state"] === "4") {
+                            $.message({
+                                message: '余额不足！',
+                                type: 'error'
+                            });
+                        } else if (response["state"] === "5") {
+                            $.message({
+                                message: '交易成功！',
+                                type: 'success'
+                            });
+                            $("#from").val("");
+                            $("#to").val("");
+                            $("#amount").val("");
+                            $("#pswd").val("");
+                        }
+                    },
+                });
+            }
+        })
+    </script>
+    </body>
+    </html>
+{{end}}
