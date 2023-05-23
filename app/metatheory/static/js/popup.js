@@ -9,21 +9,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 保存数据
     saveButton.addEventListener('click', () => {
-        let result = confirm("确定要执行此操作吗？");
-        if (result) {
-            const key = keyInput.value;
-            const value = valueInput.value;
-            chrome.runtime.sendMessage({ action: 'saveData', key, value }, (response) => {
-                resultDiv.innerText = response.message;
-            });
-        }
+        let beforeValue;
+        let key = keyInput.value;
+        chrome.runtime.sendMessage({ action: 'getData', key }, (response) => {
+            beforeValue = response.data;
+        });
+        setTimeout(() => {
+            if (beforeValue === undefined) {
+                let result = confirm("该键还没有绑定值，执行此操作将会与该值进行绑定，确定要执行此操作吗？");
+                if (result) {
+                    const key = keyInput.value;
+                    const value = valueInput.value;
+                    chrome.runtime.sendMessage({ action: 'saveData', key, value }, (response) => {
+                        resultDiv.innerText = response.message;
+                    });
+                }
+            } else {
+                let result = confirm("该键已经绑定了值，执行此操作将会覆盖之前存储的值，确定要执行此操作吗？");
+                if (result) {
+                    const key = keyInput.value;
+                    const value = valueInput.value;
+                    chrome.runtime.sendMessage({ action: 'saveData', key, value }, (response) => {
+                        resultDiv.innerText = response.message;
+                    });
+                }
+            }
+        }, 300);
     });
 
     // 获取数据
     getButton.addEventListener('click', () => {
         const key = keyInput.value;
         chrome.runtime.sendMessage({ action: 'getData', key }, (response) => {
-            resultDiv.innerText = response.data;
+            if (response.data === undefined) {
+                resultDiv.innerText = "该键还没有与值进行数据存储哦。";
+            } else {
+                resultDiv.innerText = response.data;
+            }
         });
     });
 
