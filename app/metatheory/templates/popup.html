@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snakecoin 钱包插件</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/app.css">
+    <script src="../static/js/jquery-3.7.0.min.js"></script>
+    <script src="../static/js/popup.js"></script>
+</head>
+<body>
+<br>
+<h1 style="display: flex; justify-content: center">MetaTheory</h1>
+<ul class="nav">
+    <li><a href="#" id="home">首页</a></li>
+    <li><a href="#" id="getBalance">余额查询</a></li>
+    <li><a href="#" id="newAccount">新建账户</a></li>
+    <li><a href="#" id="newTx">交易</a></li>
+    <li><a href="#" id="mine">挖矿</a></li>
+</ul>
+<br>
+<div id="div1" class="div-container active">
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="keyInput" placeholder="键，例：账户1">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="valueInput" placeholder="值，例：0x20f65D...">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <button id="saveButton">存储</button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <button id="getButton">取出</button>
+    </div>
+    <div style="display: flex; justify-content: center"><p id="result"></p></div>
+    <div id="result" style="display: flex; justify-content: center">
+        <button id="copyButton">复制</button>
+    </div>
+</div>
+<div id="div2" class="div-container">
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="getBalanceAccount" placeholder="输入要查询的账户">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <button id="searchButton">查询</button>
+    </div>
+    <div style="display: flex; justify-content: center"><p id="result2"></p></div>
+</div>
+<div id="div3" class="div-container">
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="password" placeholder="输入密码">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <button id="newAccountButton">新建</button>
+    </div>
+    <div style="display: flex; justify-content: center"><p id="result3"></p></div>
+</div>
+<div id="div4" class="div-container">
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="from" placeholder="发送地址">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="to" placeholder="接收地址">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="amount" placeholder="交易数额">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="pswd" placeholder="密码">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <button id="sendTx">发送交易</button>
+    </div>
+    <div style="display: flex; justify-content: center"><p id="result4"></p></div>
+</div>
+<div id="div5" class="div-container">
+    <div style="display: flex; justify-content: center">
+        <button id="mining">挖矿</button>
+    </div>
+    <div style="display: flex; justify-content: center"><p id="result5"></p></div>
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="nonce" placeholder="输入得到的随机数">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <input style="width: 320px" type="text" id="receive" placeholder="奖励接收者">
+    </div>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <button id="newBlock">提交区块</button>
+    </div>
+</div>
+</body>
+</html>

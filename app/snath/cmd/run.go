@@ -7,6 +7,7 @@ import (
 
 func init() {
 	rootCmd.AddCommand(runCmd)
+	runCmd.Flags().StringP("rpc.port", "r", "8545", "password used to unlock the account")
 }
 
 var runCmd = &cobra.Command{
@@ -14,6 +15,6 @@ var runCmd = &cobra.Command{
 	Short: "Start a Snakecoin node",
 	Long:  `Start and connect to the Snakecoin main network.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		logic.Run()
+		logic.Run(cmd)
 	},
 }
