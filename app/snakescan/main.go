@@ -43,14 +43,30 @@ func main() {
 	app.NoRoute(func(c *gin.Context) {
 		c.HTML(http.StatusNotFound, "main/404.html", nil)
 	})
-
 	app.GET("/", func(c *gin.Context) {
 		r, _ := client.GetAllBlock(context.Background(), &pb.GetAllBlockReq{})
 		r2, _ := client.GetAllTx(context.Background(), &pb.GetAllTxReq{})
-		c.HTML(http.StatusOK, "main/index.html", gin.H{
-			"blocks": r.Bs[:6],
-			"txs":    r2.Txs[:6],
-		})
+		if len(r.Bs) >= 6 && len(r2.Txs) < 6 {
+			c.HTML(http.StatusOK, "main/index.html", gin.H{
+				"blocks": r.Bs[:6],
+				"txs":    r2.Txs,
+			})
+		} else if len(r.Bs) < 6 && len(r2.Txs) >= 6 {
+			c.HTML(http.StatusOK, "main/index.html", gin.H{
+				"blocks": r.Bs,
+				"txs":    r2.Txs[:6],
+			})
+		} else if len(r.Bs) >= 6 && len(r2.Txs) >= 6 {
+			c.HTML(http.StatusOK, "main/index.html", gin.H{
+				"blocks": r.Bs[:6],
+				"txs":    r2.Txs[:6],
+			})
+		} else if len(r.Bs) < 6 && len(r2.Txs) < 6 {
+			c.HTML(http.StatusOK, "main/index.html", gin.H{
+				"blocks": r.Bs,
+				"txs":    r2.Txs,
+			})
+		}
 	})
 	app.GET("/txs", func(c *gin.Context) {
 		pageNum := c.Query("pageNum")
